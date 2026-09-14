@@ -1,5 +1,4 @@
-Урок: https://github.com/it-incubator/ed-back-lessons-bloggers-nest/tree/lesson-4-env-scopes
-      https://github.com/it-incubator/nestjs/tree/main/examples/nestjs/configuration-level-1
+Урок:
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
