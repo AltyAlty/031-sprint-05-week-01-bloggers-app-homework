@@ -6,6 +6,11 @@
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+В отличие от MongoDB, PostgreSQL при установке на Windows по умолчанию устанавливается как системная служба и
+запускается автоматически вместе с Windows.
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 pgAdmin4 - это GUI СУБД для управления БД, использующих PostgreSQL.
 
 В pgAdmin4 вверху слева в разделе "Object Explorer":
@@ -286,7 +291,7 @@ CREATE DATABASE "Examples_001"
 		ENCODING = 'UTF8'
 		LOCALE_PROVIDER = 'libc'
 		CONNECTION LIMIT = -1
-		IS_TEMPLATE = False;
+		IS_TEMPLATE = false;
 
 1.5.2 Создание таблицы c PK:
 
@@ -447,7 +452,8 @@ SELECT id, u.first_name, u.last_name, u.passport_number, u.is_married
 WHERE field_name NOT IN (num_01, num_02, num_03).
 - Поиск по шаблону при помощи операторов "LIKE" и "ILIKE". Могут использовать с ключевым словом "ESCAPE" для
 экранирования: WHERE email '%y!_%' ESCAPE '!'. Без ключевого слова "ESCAPE" для экранирования нужно использовать символ
-"\": WHERE email '%y\_%'.
+"\": WHERE email '%y\_%'. В операторах "LIKE" и "ILIKE" символ "%" обозначает любое количество любых символов, а символ
+"_" - ровно один любой символ.
 - Проверка на NULL при помощи операторов "IS NULL" и "IS NOT NULL".
 - Логические связки при помощи операторов "AND", "OR" и "NOT".
 4.4 В конце запроса можно использовать оператор "ORDER BY" для сортировки получаемых данных. Этот оператор можно
@@ -1043,22 +1049,25 @@ SELECT SUM(balance)
 переопределить:
 - ORDER BY balance ASC NULLS FIRST - NULL будут первыми при сортировке по возрастанию.
 - ORDER BY balance DESC NULLS LAST - NULL будут последними при сортировке по убыванию.
-16.5 Примеры:
+16.5 После имени поля можно указать ключевое слово "COLLATE", чтобы задать правило сравнения строк. Например, следующий
+вариант будет использовать сортировку строго по кодам символов ASCII, как это делает MongoDB:
+ORDER BY login COLLATE "C" ASC.
+16.6 Примеры:
 
-16.5.1 Получение данных таблицы по всем полям с сортировкой по убыванию по указанному полю:
+16.6.1 Получение данных таблицы по всем полям с сортировкой по убыванию по указанному полю:
 
 SELECT *
 	FROM public.wallets
 	ORDER BY balance DESC;
 
-16.5.2 Получение данных таблицы по всем полям с сортировкой по убыванию по одному полю и с сортировкой по возрастанию по
+16.6.2 Получение данных таблицы по всем полям с сортировкой по убыванию по одному полю и с сортировкой по возрастанию по
 другому полю:
 
 SELECT *
 	FROM public.users
 	ORDER BY is_married DESC, last_name ASC;
 
-16.5.3 Получение данных таблицы по всем полям с сортировкой по убыванию по указанному полю с ограничением количества
+16.6.3 Получение данных таблицы по всем полям с сортировкой по убыванию по указанному полю с ограничением количества
 записей на вывод:
 
 SELECT *
@@ -1066,7 +1075,7 @@ SELECT *
 	ORDER BY balance DESC
 		LIMIT 3;
 
-16.5.4 Подсчет записей по условию c отфильтрованной группировкой и сортировкой с пагинацией:
+16.6.4 Подсчет записей по условию c отфильтрованной группировкой и сортировкой с пагинацией:
 
 SELECT currency, COUNT(*)
 	FROM public.wallets
@@ -1178,4 +1187,88 @@ FROM public.wallets;
 такой ситуации лучше использовать ключевые слова "NOT EXISTS" или оператор "NOT IN" с оператором "IS NOT NULL" в
 подзапросе.
 
+21. Оператор "::" - это оператор, приводящий тип.
+21.1 Справа от оператора указывается значение, а слева от него - тип, к которому надо привести значение, например:
+'123'::integer
+
 /*--------------------------------------------------------------------------------------------------------------------*/
+
+В операторах "LIKE" и "ILIKE" символ "%" обозначает любое количество любых символов, а символ "_" - ровно один любой
+символ.
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+CREATE DATABASE "031-s-05-w-01-bloggers-app-hw"
+	WITH
+		OWNER = postgres
+		ENCODING = 'UTF8'
+		LOCALE_PROVIDER = 'libc'
+		CONNECTION LIMIT = -1
+		IS_TEMPLATE = False;
+
+CREATE TABLE public.users (
+	id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+	login VARCHAR NOT NULL,
+	original_email VARCHAR NOT NULL,
+	email VARCHAR NOT NULL,
+	password_hash VARCHAR NOT NULL,
+	is_confirmed BOOLEAN NOT NULL DEFAULT false,
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	deleted_at TIMESTAMP DEFAULT NULL
+);
+
+CREATE TABLE public.email_confirmations (
+	id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+	user_id UUID NOT NULL,
+	confirmation_code VARCHAR NOT NULL,
+	expiration_date TIMESTAMP NOT NULL,
+	FOREIGN KEY (user_id)
+		REFERENCES public.users (id) MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE CASCADE
+);
+
+CREATE TABLE public.password_recovery_codes_data (
+	id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+	user_id UUID NOT NULL,
+	password_recovery_code VARCHAR NOT NULL,
+	expiration_date TIMESTAMP NOT NULL,
+	FOREIGN KEY (user_id)
+		REFERENCES public.users (id) MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE CASCADE
+);
+
+CREATE TABLE public.security_devices (
+	device_id UUID PRIMARY KEY,
+	user_id UUID NOT NULL,
+	title VARCHAR NOT NULL,
+	ip VARCHAR NOT NULL,
+	last_active_date TIMESTAMP NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	deleted_at TIMESTAMP DEFAULT NULL,
+	FOREIGN KEY (user_id)
+		REFERENCES public.users (id) MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE CASCADE
+);
+
+CREATE TABLE public.sessions (
+	id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+	user_id UUID NOT NULL,
+	device_id UUID NOT NULL,
+	device_name VARCHAR NOT NULL,
+	ip VARCHAR NOT NULL,
+	iat TIMESTAMP NOT NULL,
+	exp TIMESTAMP NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	deleted_at TIMESTAMP DEFAULT NULL,
+	FOREIGN KEY (user_id)
+		REFERENCES public.users (id) MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE CASCADE,
+	FOREIGN KEY (device_id)
+		REFERENCES public.security_devices (device_id) MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE CASCADE
+);

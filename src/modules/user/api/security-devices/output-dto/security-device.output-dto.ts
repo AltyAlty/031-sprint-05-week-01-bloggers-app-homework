@@ -1,4 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  SecurityDeviceListPostgresqlDb,
+  SecurityDevicePostgresqlDb,
+} from '../../../infrastructure/security-devices/postgresql-types/security-device-postgresql-db.type';
 import { SecurityDeviceListOutputDTO } from './security-device-list.output-dto';
 import { SecurityDeviceDocumentType } from '../../../domain/security-devices/document-types/security-device.document-type';
 import { SecurityDeviceListDocumentType } from '../../../domain/security-devices/document-types/security-device-list.document-type';
@@ -36,6 +40,28 @@ export class SecurityDeviceOutputDTO {
   ): SecurityDeviceListOutputDTO {
     return securityDevices.map((securityDevice: SecurityDeviceDocumentType) => {
       return this.mapFromSecurityDeviceDocumentTypeToSecurityDeviceOutputDTO(securityDevice);
+    });
+  }
+
+  /*Маппер для преобразования пользовательского устройства из БД в подготовленное для отправки клиенту пользовательское
+  устройство.*/
+  public static mapFromSecurityDevicePostgresqlDbToSecurityDeviceOutputDTO(
+    securityDevice: SecurityDevicePostgresqlDb
+  ): SecurityDeviceOutputDTO {
+    const securityDeviceOutputDTO: SecurityDeviceOutputDTO = new SecurityDeviceOutputDTO();
+    securityDeviceOutputDTO.ip = securityDevice.ip;
+    securityDeviceOutputDTO.title = securityDevice.title;
+    securityDeviceOutputDTO.lastActiveDate = securityDevice.last_active_date;
+    securityDeviceOutputDTO.deviceId = securityDevice.device_id;
+    return securityDeviceOutputDTO;
+  }
+
+  /*Маппер для преобразования блогов из БД в подготовленные для отправки клиенту блоги.*/
+  public static mapFromSecurityDeviceListPostgresqlDbToSecurityDeviceListOutputDTO(
+    securityDevices: SecurityDeviceListPostgresqlDb
+  ): SecurityDeviceListOutputDTO {
+    return securityDevices.map((securityDevice: SecurityDevicePostgresqlDb) => {
+      return this.mapFromSecurityDevicePostgresqlDbToSecurityDeviceOutputDTO(securityDevice);
     });
   }
 }

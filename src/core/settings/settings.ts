@@ -3,8 +3,8 @@ import { SortDirectionInputDTO } from '../pagination/input-dto/sort-direction.in
 export const SETTINGS = {
   GLOBAL_PREFIX: 'api',
 
-  AUTH_PREFIX: 'auth',
   AUTH_API_TAG: 'Auth',
+  AUTH_PREFIX: 'auth',
   REGISTER_USER_PATH: 'registration',
   RESEND_CONFIRMATION_EMAIL_PATH: 'registration-email-resending',
   CONFIRM_USER_BY_CODE_PATH: 'registration-confirmation',
@@ -15,20 +15,20 @@ export const SETTINGS = {
   LOGOUT_PATH: '/logout',
   GET_USER_DATA_BY_ACCESS_TOKEN_PATH: 'me',
 
-  SECURITY_DEVICES_PREFIX: 'security/devices',
   SECURITY_DEVICES_API_TAG: 'Security Devices',
+  SECURITY_DEVICES_PREFIX: 'security/devices',
   GET_SECURITY_DEVICE_LIST_PATH: '',
   REVOKE_SESSION_BY_DEVICE_ID_PATH: ':id',
   REVOKE_ALL_SESSIONS_EXCEPT_CURRENT_ONE_PATH: '',
 
-  USERS_PREFIX: 'users',
   USERS_API_TAG: 'Users',
+  USERS_PREFIX: 'sa/users',
   CREATE_USER_PATH: '',
   GET_USER_LIST_PATH: '',
   DELETE_USER_BY_ID_PATH: ':id',
 
-  BLOGS_PREFIX: 'blogs',
   BLOGS_API_TAG: 'Blogs',
+  BLOGS_PREFIX: 'blogs',
   CREATE_BLOG_PATH: '',
   CREATE_POST_FOR_BLOG_PATH: ':blogId/posts',
   GET_BLOG_BY_ID_PATH: ':id',
@@ -37,8 +37,8 @@ export const SETTINGS = {
   UPDATE_BLOG_BY_ID_PATH: ':id',
   DELETE_BLOG_BY_ID_PATH: ':id',
 
-  POSTS_PREFIX: 'posts',
   POSTS_API_TAG: 'Posts',
+  POSTS_PREFIX: 'posts',
   CREATE_POST_PATH: '',
   CREATE_COMMENT_FOR_POST_PATH: ':postId/comments',
   GET_POST_BY_ID_PATH: ':id',
@@ -48,15 +48,15 @@ export const SETTINGS = {
   LIKE_POST_BY_ID_PATH: ':id/like-status',
   DELETE_POST_BY_ID_PATH: ':id',
 
-  COMMENTS_PREFIX: 'comments',
   COMMENTS_API_TAG: 'Comments',
+  COMMENTS_PREFIX: 'comments',
   GET_COMMENT_BY_ID_PATH: ':id',
   UPDATE_COMMENT_BY_ID_PATH: ':id',
   LIKE_COMMENT_BY_ID_PATH: ':id/like-status',
   DELETE_COMMENT_BY_ID_PATH: ':id',
 
-  TESTING_PREFIX: 'testing',
   TESTING_API_TAG: 'Testing',
+  TESTING_PREFIX: 'testing',
   CLEAR_DB_PATH: 'all-data',
 
   DEFAULT_PAGINATION_PAGE_NUMBER: 1,

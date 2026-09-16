@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserPostgresqlDb } from '../../../infrastructure/users/postgresql-types/user-postgresql-db.type';
 import { UserDocumentType } from '../../../domain/users/document-types/user.document-type';
 
 /*Output DTO для получения данных пользователя при предоставлении AT.*/
@@ -17,6 +18,16 @@ export class AuthUserDataOutputDTO {
   public static mapFromUserDocumentTypeToAuthUserDataOutputDTO(user: UserDocumentType): AuthUserDataOutputDTO {
     const authUserDataOutputDTO: AuthUserDataOutputDTO = new AuthUserDataOutputDTO();
     authUserDataOutputDTO.userId = user._id.toString();
+    authUserDataOutputDTO.login = user.login;
+    authUserDataOutputDTO.email = user.email;
+    return authUserDataOutputDTO;
+  }
+
+  /*Маппер для преобразования пользователя из БД в подготовленные для отправки клиенту данные пользователя при
+  предоставлении AT.*/
+  public static mapFromUserPostgresqlDbToAuthUserDataOutputDTO(user: UserPostgresqlDb): AuthUserDataOutputDTO {
+    const authUserDataOutputDTO: AuthUserDataOutputDTO = new AuthUserDataOutputDTO();
+    authUserDataOutputDTO.userId = user.id.toString();
     authUserDataOutputDTO.login = user.login;
     authUserDataOutputDTO.email = user.email;
     return authUserDataOutputDTO;

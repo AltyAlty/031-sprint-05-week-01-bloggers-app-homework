@@ -56,7 +56,7 @@
 
 Установка версии приложения с использованием NestJS и MongoDB:
 1. Установка Nest CLI глобально (если необходимо): npm install -g @nestjs/cli
-2. Создание проекта на NestJS при помощи установленного глобально Nest CLI: nest new app_name
+2. Создание проекта на NestJS при помощи установленного глобально Nest CLI (если необходимо): nest new app_name
 3. Создание проекта на NestJS без установленного глобально Nest CLI (если необходимо): npx @nestjs/cli@latest new app_name
 4. Установка зависимостей (если необходимо): pnpm install
 5. Установка ESLint: pnpm add -D eslint
@@ -96,6 +96,10 @@
 39. Установка типов для cookie-parser: pnpm add -D @types/cookie-parser
 40. Установка типов для @nestjs/cqrs: pnpm add @nestjs/cqrs
 41. Установка типов для @nestjs/throttler: pnpm add @nestjs/throttler
+42. Установка pg: pnpm add pg
+43. Установка типов для pg: pnpm add -D @types/pg
+44. Установка TypeORM: pnpm add typeorm
+45. Установка @nestjs/typeorm: pnpm add @nestjs/typeorm
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 

@@ -42,9 +42,9 @@ MongoDB хорошо подходит для операций чтения.
 3.2 В папке "bin" выполнить команду "./mongod.exe --dbpath .\data\db", где ".\data\db" это путь, где мы хотим создать
 саму БД (папки должны быть уже созданы). В нашем случае используется такие команды:
 PowerShell:
-./mongod.exe --dbpath ..\..\..\..\..\DevProjects\IT-IncubatorBackEndProjects\030-sprint-04-week-04-bloggers-app-homework\src\db\mongodb\data\db
+./mongod.exe --dbpath ..\..\..\..\..\DevProjects\IT-IncubatorBackEndProjects\031-sprint-05-week-01-bloggers-app-homework\src\db\mongodb\data\db
 Командная строка:
-mongod --dbpath ..\..\..\..\..\DevProjects\IT-IncubatorBackEndProjects\030-sprint-04-week-04-bloggers-app-homework\src\db\mongodb\data\db
+mongod --dbpath ..\..\..\..\..\DevProjects\IT-IncubatorBackEndProjects\031-sprint-05-week-01-bloggers-app-homework\src\db\mongodb\data\db
 4. Запустить CLI СУБД MongoDB Shell.
 4.1 Скачать MongoDB Shell в формате .zip с сайта www.mongodb.com/try/download/shell.
 4.2 Файл "mongosh.exe" из архива скопировать в папку "bin".
@@ -280,7 +280,6 @@ Mongoose понимает геттеры из класса благодаря м
 
 Список команд для CRUD-операций, которые можно использовать в MongoDB:
 
-
 1. CREATE:
 
 1.1 Добавление совсем другого типа данных:
@@ -295,7 +294,6 @@ db.inventory.insertMany([
    {item: "mat", qty: 85, tags: ["gray"], size: {h: 27.9, w: 35.5, uom: "cm"}},
    {item: "mousepad", qty: 25, tags: ["gel", "blue"], size: {h: 19, w: 22.85, uom: "cm"}}
 ])
-
 
 2. READ:
 
@@ -336,13 +334,12 @@ db.inventory.count({})
 в первом свойстве), 1 означает сортировку по возрастанию (-1 по убыванию):
 db.inventory.find({}).sort({ "item": 1, "_id": 1})
 
-
 3. UPDATE:
 
 3.1 Обновление в коллекции документа, у которого значение свойства "item" равно "paper". У этого документа свойство
 "size.uom" станет "cm", свойство "status" станет "P", свойство "lastModified" будет иметь значение равное текущей дате,
 причем если этого свойства не было, то оно будет добавлено:
-db.inventory.updateOne({ item: "paper" },{$set: {"size.uom": "cm", status: "P"}, $currentDate: {lastModified: true}})
+db.inventory.updateOne({ item: "paper" }, {$set: {"size.uom": "cm", status: "P"}, $currentDate: {lastModified: true}})
 
 3.2 Обновление в коллекции документов, у которых значение свойства "qty" меньше 50. У этих документов свойство
 "size.uom" станет "in", свойство "status" станет "P", свойство "lastModified" будет иметь значение равное текущей дате,
@@ -351,7 +348,6 @@ db.inventory.updateMany({ "qty": { $lt: 50 } }, {$set: {"size.uom": "in", status
 
 3.3 Замена одного документа в коллекции на другой (нельзя менять свойство "_id" и нельзя использовать операторы):
 db.inventory.replaceOne({item: "paper"}, {item: "paper", instock: [{warehouse: "A", qty: 60}, {warehouse: "B", qty: 40}]})
-
 
 4. DELETE:
 

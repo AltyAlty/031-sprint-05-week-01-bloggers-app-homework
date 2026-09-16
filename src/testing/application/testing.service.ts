@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { InjectDataSource } from '@nestjs/typeorm';
 import { Connection } from 'mongoose';
+import { DataSource } from 'typeorm';
 import { Blog } from '../../modules/blog/domain/blogs/blog.entity';
 import type { BlogModelType } from '../../modules/blog/domain/blogs/model-types/blog.model-type';
 import { Comment } from '../../modules/blog/domain/comments/comment.entity';
@@ -31,7 +33,8 @@ export class TestingService {
     @InjectModel(EmailConfirmation.name) private readonly emailConfirmationModel: EmailConfirmationModelType,
     @InjectModel(PasswordRecoveryCodeData.name)
     private readonly passwordRecoveryCodeDataModel: PasswordRecoveryCodeDataModelType,
-    @InjectConnection() private readonly connection: Connection
+    @InjectConnection() private readonly connection: Connection,
+    @InjectDataSource() private readonly dataSource: DataSource
   ) {}
 
   /*Метод для очистки БД, без удаления индексов.*/
@@ -51,5 +54,18 @@ export class TestingService {
   /*Метод для полной очистки БД.*/
   public async dropDb(): Promise<void> {
     await this.connection.dropDatabase();
+  }
+
+  /*Метод для очистки таблиц PostgreSQL.*/
+  public async clearPostgresDb(): Promise<void> {
+    await this.dataSource.query(`
+      TRUNCATE TABLE 
+        users, 
+        email_confirmations, 
+        password_recovery_codes_data, 
+        security_devices, 
+        sessions 
+      CASCADE;
+    `);
   }
 }

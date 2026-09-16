@@ -11,6 +11,7 @@ import { DomainExceptionFilter } from './core/exception-filters/domain/domain.ex
 import { BlogModule } from './modules/blog/blog.module';
 import { UserModule } from './modules/user/user.module';
 import { TestingModule } from './testing/testing.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 /*Главный обязательный модуль приложения.*/
 @Module({
@@ -22,8 +23,26 @@ import { TestingModule } from './testing/testing.module';
       imports: [CoreModule],
       inject: [CoreConfig],
       useFactory: (coreConfig: CoreConfig): { uri: string; dbName: string } => ({
-        uri: coreConfig.MONGO_URI,
+        uri: coreConfig.MONGO_URI_LOCAL,
         dbName: coreConfig.DB_NAME,
+      }),
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [CoreModule],
+      inject: [CoreConfig],
+      useFactory: (coreConfig: CoreConfig) => ({
+        type: coreConfig.POSTGRESQL_DB_TYPE as 'postgres',
+        host: coreConfig.POSTGRESQL_DB_HOST,
+        port: coreConfig.POSTGRESQL_DB_PORT,
+        username: coreConfig.POSTGRESQL_DB_USERNAME,
+        password: coreConfig.POSTGRESQL_DB_PASSWORD,
+        database: coreConfig.DB_NAME,
+        /*Автоматически регистрируем все сущности, которые были добавлены через "TypeOrmModule.forFeature()" в модулях
+        приложения, иначе пришлось бы вручную перечислять все сущности в массиве "entities".*/
+        autoLoadEntities: false,
+        /*Указываем, чтобы при каждом запуске приложения TypeORM автоматически сравнивал сущности с реальными таблицами
+        в БД и синхронизировал структуру.*/
+        synchronize: false,
       }),
     }),
     ThrottlerModule.forRootAsync({

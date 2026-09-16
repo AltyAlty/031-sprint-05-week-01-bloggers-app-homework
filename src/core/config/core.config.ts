@@ -30,6 +30,11 @@ export class CoreConfig {
     this.PORT = Number(this.configService.get('PORT'));
     this.MONGO_URI = this.configService.get('MONGO_URI');
     this.MONGO_URI_LOCAL = this.configService.get('MONGO_URI_LOCAL');
+    this.POSTGRESQL_DB_TYPE = this.configService.get('POSTGRESQL_DB_TYPE');
+    this.POSTGRESQL_DB_HOST = this.configService.get('POSTGRESQL_DB_HOST');
+    this.POSTGRESQL_DB_PORT = Number(this.configService.get('POSTGRESQL_DB_PORT'));
+    this.POSTGRESQL_DB_USERNAME = this.configService.get('POSTGRESQL_DB_USERNAME');
+    this.POSTGRESQL_DB_PASSWORD = this.configService.get('POSTGRESQL_DB_PASSWORD');
     this.DB_NAME = this.configService.get('DB_NAME');
     this.TEST_DB_NAME = this.configService.get('TEST_DB_NAME');
 
@@ -62,6 +67,29 @@ export class CoreConfig {
   @IsNotEmpty({ message: '$property must not be empty' })
   @Trim()
   MONGO_URI_LOCAL: string;
+
+  @IsString({ message: '$property must be a string' })
+  @IsNotEmpty({ message: '$property must not be empty' })
+  @Trim()
+  POSTGRESQL_DB_TYPE: string;
+
+  @IsString({ message: '$property must be a string' })
+  @IsNotEmpty({ message: '$property must not be empty' })
+  @Trim()
+  POSTGRESQL_DB_HOST: string;
+
+  @IsNumber({}, { message: '$property must be a number' })
+  POSTGRESQL_DB_PORT: number;
+
+  @IsString({ message: '$property must be a string' })
+  @IsNotEmpty({ message: '$property must not be empty' })
+  @Trim()
+  POSTGRESQL_DB_USERNAME: string;
+
+  @IsString({ message: '$property must be a string' })
+  @IsNotEmpty({ message: '$property must not be empty' })
+  @Trim()
+  POSTGRESQL_DB_PASSWORD: string;
 
   @IsString({ message: '$property must be a string' })
   @IsNotEmpty({ message: '$property must not be empty' })

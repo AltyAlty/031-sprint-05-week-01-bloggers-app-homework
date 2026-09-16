@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from '../../../modules/user/application/auth/auth.service';
+import { AuthPostgresqlService } from '../../../modules/user/application/auth/auth-postgresql.service';
+import { UserPostgresqlDb } from '../../../modules/user/infrastructure/users/postgresql-types/user-postgresql-db.type';
 import { AuthConfig } from '../../../modules/user/config/auth.config';
 import { UserDocumentType } from '../../../modules/user/domain/users/document-types/user.document-type';
 import { DomainException, DomainExceptionCode } from '../../exceptions/domain/domain.exception';
@@ -13,7 +15,8 @@ import { UserAccessJwtAuthContextDTO } from './dto/user-access-jwt-auth-context.
 export class AccessJwtAuthStrategy extends PassportStrategy(Strategy, 'access-jwt') {
   public constructor(
     public readonly authConfig: AuthConfig,
-    private readonly authService: AuthService
+    // private readonly authService: AuthService,
+    private readonly authService: AuthPostgresqlService
   ) {
     /*Настраиваем как библиотеке Passport.js работать с Access JWT.*/
     super({
@@ -30,7 +33,8 @@ export class AccessJwtAuthStrategy extends PassportStrategy(Strategy, 'access-jw
   декодированный payload из Access JWT.*/
   public async validate(payload: AccessJwtPayloadDTO): Promise<UserAccessJwtAuthContextDTO> {
     /*Просим сервис "AuthService" валидировать payload из Access JWT.*/
-    const user: UserDocumentType | null = await this.authService.validateAccessJwtPayload(payload);
+    // const user: UserDocumentType | null = await this.authService.validateAccessJwtPayload(payload);
+    const user: UserPostgresqlDb | null = await this.authService.validateAccessJwtPayload(payload);
 
     /*Если payload из Access JWT не был валидирован, то выбрасываем исключение "DomainException" с информацией об
     этом.*/

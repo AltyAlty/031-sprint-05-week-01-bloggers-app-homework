@@ -1,4 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  UserListPostgresqlDb,
+  UserPostgresqlDb,
+} from '../../../infrastructure/users/postgresql-types/user-postgresql-db.type';
 import { UserListOutputDTO } from './user-list.output-dto';
 import { UserDocumentType } from '../../../domain/users/document-types/user.document-type';
 import { UserListDocumentType } from '../../../domain/users/document-types/user-list.document-type';
@@ -22,7 +26,7 @@ export class UserOutputDTO {
     const userOutputDTO: UserOutputDTO = new UserOutputDTO();
     userOutputDTO.id = user._id.toString();
     userOutputDTO.login = user.login;
-    userOutputDTO.email = user.email;
+    userOutputDTO.email = user.originalEmail;
     userOutputDTO.createdAt = user.createdAt;
     return userOutputDTO;
   }
@@ -31,6 +35,23 @@ export class UserOutputDTO {
   public static mapFromUserListDocumentTypeToUserListOutputDTO(users: UserListDocumentType): UserListOutputDTO {
     return users.map((user: UserDocumentType) => {
       return this.mapFromUserDocumentTypeToUserOutputDTO(user);
+    });
+  }
+
+  /*Маппер для преобразования пользователя из БД в подготовленного для отправки клиенту пользователя.*/
+  public static mapFromUserPostgresqlDbToUserOutputDTO(user: UserPostgresqlDb): UserOutputDTO {
+    const userOutputDTO: UserOutputDTO = new UserOutputDTO();
+    userOutputDTO.id = user.id.toString();
+    userOutputDTO.login = user.login;
+    userOutputDTO.email = user.original_email;
+    userOutputDTO.createdAt = user.created_at;
+    return userOutputDTO;
+  }
+
+  /*Маппер для преобразования пользователей из БД в подготовленных для отправки клиенту пользователей.*/
+  public static mapFromUserListPostgresqlDbToUserListOutputDTO(users: UserListPostgresqlDb): UserListOutputDTO {
+    return users.map((user: UserPostgresqlDb) => {
+      return this.mapFromUserPostgresqlDbToUserOutputDTO(user);
     });
   }
 }

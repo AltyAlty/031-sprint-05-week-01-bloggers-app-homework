@@ -1,7 +1,9 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBasicAuth, ApiTags } from '@nestjs/swagger';
 import { UsersService } from '../../application/users/users.service';
+import { UsersPostgresqlService } from '../../application/users/users-postgresql.service';
 import { UsersQueryService } from '../../application/users/users.query-service';
+import { UsersPostgresqlQueryService } from '../../application/users/users-postgresql.query-service';
 import { CreateUserInputDTO } from './input-dto/create-user.input-dto';
 import { GetUserListQueryInputDTO } from './input-dto/query/get-user-list-query.input-dto';
 import { PaginationMetaDataOutputDTO } from '../../../../core/pagination/output-dto/pagination-meta-data.output-dto';
@@ -18,8 +20,10 @@ import { UsersControllerSwaggerDecorators } from '../../../../core/swagger/decor
 @Controller(SETTINGS.USERS_PREFIX)
 export class UsersController {
   public constructor(
-    private readonly usersService: UsersService,
-    private readonly usersQueryService: UsersQueryService
+    // private readonly usersService: UsersService,
+    // private readonly usersQueryService: UsersQueryService
+    private readonly usersService: UsersPostgresqlService,
+    private readonly usersQueryService: UsersPostgresqlQueryService
   ) {}
 
   /*001. POST-запрос по созданию пользователя.*/

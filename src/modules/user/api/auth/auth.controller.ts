@@ -2,7 +2,9 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } fro
 import { ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { AuthService } from '../../application/auth/auth.service';
+import { AuthPostgresqlService } from '../../application/auth/auth-postgresql.service';
 import { UsersQueryService } from '../../application/users/users.query-service';
+import { UsersPostgresqlQueryService } from '../../application/users/users-postgresql.query-service';
 import { AuthUserByLoginOrEmailInputDTO } from './input-dto/auth-user-by-login-or-email.input-dto';
 import { ConfirmUserByCodeInputDTO } from './input-dto/confirm-user-by-code.input-dto';
 import { RegisterUserInputDTO } from './input-dto/register-user.input-dto';
@@ -31,8 +33,10 @@ import { ExtractUserDataFromRequest } from './decorators/param-extraction/extrac
 @Controller(SETTINGS.AUTH_PREFIX)
 export class AuthController {
   public constructor(
-    private readonly authService: AuthService,
-    private readonly usersQueryService: UsersQueryService
+    // private readonly authService: AuthService,
+    // private readonly usersQueryService: UsersQueryService
+    private readonly authService: AuthPostgresqlService,
+    private readonly usersQueryService: UsersPostgresqlQueryService
   ) {}
 
   /*001. POST-запрос по регистрации пользователя.*/
